@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFuturo: Plataforma de Aprendizaje Interactivo</title>
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        :root {
+            --primary: #1E88E5;
+            --secondary: #43A047;
+            --accent: #FF9800;
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+            --medium-gray: #E0E0E0;
+            --dark-gray: #757575;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-gray);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 1rem;
+        }
+        
+        /* --- HEADER Y NAVEGACIÓN --- */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            color: var(--primary);
+        }
+        
+        .nav-links li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            right: 15px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .icon-btn:hover {
+            background-color: var(--light-gray);
+        }
+        
+        /* --- CONTENIDO PRINCIPAL --- */
+        main {
+            padding: 30px 0;
+        }
+        
+        .page-header {
+            margin-bottom: 20px;
+        }
+        
+        /* --- AULAS VIRTUALES --- */
+        .aulas-container {
+            display: flex;
+            gap: 20px;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+            height: fit-content;
+        }
+        
+        .sidebar h2 {
+            font-size: 1.2rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .materias-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .materias-list li {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .materias-list li:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .materias-list li.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .content-area {
+            flex: 1;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        
+        .content-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .unidades-list {
+            list-style: none;
+        }
+        
+        .unidad-item {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .unidad-item h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #1976D2;
+        }
+        
+        /* --- BIBLIOTECA DE RECURSOS --- */
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px 0 0 4px;
+            font-family: inherit;
+        }
+        
+        .search-btn {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            background-color: white;
+            min-width: 150px;
+        }
+        
+        .recursos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .recurso-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .recurso-img {
+            height: 150px;
+            background-color: var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-gray);
+            font-size: 2rem;
+        }
+        
+        .recurso-content {
+            padding: 15px;
+        }
+        
+        .recurso-content h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .recurso-meta {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+        }
+        
+        /* --- SISTEMA DE EVALUACIÓN --- */
+        .evaluacion-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-bottom: 20px;
+        }
+        
+        .evaluacion-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .evaluacion-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .evaluaciones-list {
+            list-style: none;
+        }
+        
+        .evaluacion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .evaluacion-info h3 {
+            margin-bottom: 5px;
+        }
+        
+        .evaluacion-meta {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-disponible {
+            background-color: #E8F5E9;
+            color: var(--secondary);
+        }
+        
+        .status-pendiente {
+            background-color: #FFF3E0;
+            color: var(--accent);
+        }
+        
+        /* --- PERFIL DE USUARIO --- */
+        .profile-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .profile-sidebar {
+            width: 260px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--medium-gray);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark-gray);
+        }
+        
+        .profile-name {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .profile-role {
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+        }
+        
+        .profile-data {
+            text-align: left;
+            border-top: 1px solid var(--medium-gray);
+            padding-top: 15px;
+        }
+        
+        .profile-data-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .profile-data-label {
+            color: var(--dark-gray);
+        }
+        
+        .profile-content {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-bottom: 20px;
+        }
+        
+        .profile-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .profile-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .stat-card h3 {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background-color: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-gray);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .aulas-container, .profile-container {
+                flex-direction: column;
+            }
+            
+            .sidebar, .profile-sidebar {
+                width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .recursos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">EduFuturo</a>
+                <ul class="nav-links">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#aulas" class="active">Aulas Virtuales</a></li>
+                    <li><a href="#biblioteca">Biblioteca</a></li>
+                    <li><a href="#evaluacion">Evaluación</a></li>
+                    <li><a href="#perfil">Perfil</a></li>
+                </ul>
+                <div class="user-controls">
+                    <button class="icon-btn">🔔</button>
+                    <button class="icon-btn">👤</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" id="aulas">
+        <div class="page-header">
+            <h1>Aulas Virtuales</h1>
+        </div>
+        
+        <div class="aulas-container">
+            <div class="sidebar">
+                <h2>Mis Materias</h2>
+                <ul class="materias-list">
+                    <li class="active">Matemáticas</li>
+                    <li>Ciencias Naturales</li>
+                    <li>Ciencias Sociales</li>
+                    <li>Lenguaje y Literatura</li>
+                    <li>Idiomas Extranjeros</li>
+                    <li>Arte y Música</li>
+                    <li>Educación Física</li>
+                    <li>Tecnología e Informática</li>
+                </ul>
+            </div>
+            
+            <div class="content-area">
+                <div class="content-tabs">
+                    <div class="tab active">Unidades</div>
+                    <div class="tab">Recursos</div>
+                    <div class="tab">Actividades</div>
+                    <div class="tab">Foro</div>
+                    <div class="tab">Calificaciones</div>
+                </div>
+                
+                <ul class="unidades-list">
+                    <li class="unidad-item">
+                        <h3>Unidad 1: Fundamentos de Álgebra</h3>
+                        <p>Introducción a los conceptos básicos del álgebra y sus aplicaciones en la resolución de problemas cotidianos.</p>
+                        <a href="#" class="btn">Ver contenido</a>
+                    </li>
+                    <li class="unidad-item">
+                        <h3>Unidad 2: Ecuaciones Lineales</h3>
+                        <p>Estudio de ecuaciones de primer grado, sistemas de ecuaciones y aplicaciones prácticas.</p>
+                        <a href="#" class="btn">Ver contenido</a>
+                    </li>
+                    <li class="unidad-item">
+                        <h3>Unidad 3: Funciones y Gráficas</h3>
+                        <p>Análisis de funciones matemáticas, representación gráfica e interpretación de resultados.</p>
+                        <a href="#" class="btn">Ver contenido</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main class="container" id="biblioteca" style="display: none;">
+        <div class="page-header">
+            <h1>Biblioteca de Recursos</h1>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar recursos...">
+            <button class="search-btn">Buscar</button>
+        </div>
+        
+        <div class="filter-container">
+            <select class="filter-select">
+                <option>Todas las materias</option>
+                <option>Matemáticas</option>
+                <option>Ciencias Naturales</option>
+                <option>Ciencias Sociales</option>
+            </select>
+            <select class="filter-select">
+                <option>Todos los niveles</option>
+                <option>Básico</option>
+                <option>Intermedio</option>
+                <option>Avanzado</option>
+            </select>
+            <select class="filter-select">
+                <option>Todos los tipos</option>
+                <option>Libros digitales</option>
+                <option>Videos</option>
+                <option>Presentaciones</option>
+                <option>Infografías</option>
+            </select>
+        </div>
+        
+        <div class="recursos-grid">
+            <div class="recurso-card">
+                <div class="recurso-img">📚</div>
+                <div class="recurso-content">
+                    <h3>Álgebra Fundamental</h3>
+                    <div class="recurso-meta">Libro digital • Matemáticas</div>
+                    <a href="#" class="btn">Ver recurso</a>
+                </div>
+            </div>
+            <div class="recurso-card">
+                <div class="recurso-img">🎬</div>
+                <div class="recurso-content">
+                    <h3>Ecuaciones Lineales Explicadas</h3>
+                    <div class="recurso-meta">Video • Matemáticas</div>
+                    <a href="#" class="btn">Ver recurso</a>
+                </div>
+            </div>
+            <div class="recurso-card">
+                <div class="recurso-img">📊</div>
+                <div class="recurso-content">
+                    <h3>Interpretación de Gráficas</h3>
+                    <div class="recurso-meta">Presentación • Matemáticas</div>
+                    <a href="#" class="btn">Ver recurso</a>
+                </div>
+            </div>
+            <div class="recurso-card">
+                <div class="recurso-img">🔍</div>
+                <div class="recurso-content">
+                    <h3>Métodos de Factorización</h3>
+                    <div class="recurso-meta">Infografía • Matemáticas</div>
+                    <a href="#" class="btn">Ver recurso</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main class="container" id="evaluacion" style="display: none;">
+        <div class="page-header">
+            <h1>Sistema de Evaluación</h1>
+        </div>
+        
+        <div class="evaluacion-tabs">
+            <div class="evaluacion-tab active">Evaluaciones</div>
+            <div class="evaluacion-tab">Calificaciones</div>
+            <div class="evaluacion-tab">Retroalimentación</div>
+        </div>
+        
+        <ul class="evaluaciones-list">
+            <li class="evaluacion-item">
+                <div class="evaluacion-info">
+                    <h3>Examen parcial: Ecuaciones Lineales</h3>
+                    <div class="evaluacion-meta">Fecha: 28/04/2025 • Duración: 60 minutos • Matemáticas</div>
+                </div>
+                <div class="evaluacion-status">
+                    <span class="status-badge status-disponible">Disponible</span>
+                </div>
+            </li>
+            <li class="evaluacion-item">
+                <div class="evaluacion-info">
+                    <h3>Cuestionario: Funciones Cuadráticas</h3>
+                    <div class="eva
